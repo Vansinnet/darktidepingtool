@@ -682,6 +682,17 @@
                 Open Source — github.com/Vansinnet/darktidepingtool
             </a>
         </div>
+        <div style="text-align: center; margin-top: 1.5rem; padding: 12px 16px; background: linear-gradient(135deg, rgba(20, 30, 20, 0.8), rgba(15, 25, 15, 0.8)); border: 1px solid rgba(77, 157, 77, 0.3); border-radius: 2px;">
+            <span style="color: #4d9d4d; font-weight: bold;">WANT EXACT RESULTS?</span>
+            <span style="color: #8a8a8a;">
+                For true UDP latency — identical to what the game's matchmaker measures — use the native
+            </span>
+            <a href="https://github.com/Vansinnet/darktidepingtool/releases/latest" target="_blank" rel="noopener"
+               style="color: #4dff4d; text-decoration: underline; font-weight: bold;">
+                darktide-ping CLI tool
+            </a>
+            <span style="color: #8a8a8a;">(Windows, 3.8 MB)</span>
+        </div>
     </div><!-- end .container -->
 
     <div class="sidebar">
@@ -694,7 +705,7 @@
                 <strong>WHY THESE 13 REGIONS?:</strong> The complete region list was extracted directly from Darktide's own matchmaker log files (<code>AppData\Roaming\Fatshark\Darktide\console_logs</code>), which log the exact AWS region codes the matchmaker resolves latency against before placing you into a session. Every region listed here appears verbatim in those logs. Fatshark's use of AWS GameLift is confirmed by their AWS re:Invent 2023 session: <a href="https://www.youtube.com/watch?v=ZgGYtuNSX4M" target="_blank" rel="noopener" style="color: #666;">Scaling Darktide from 0 to 100,000 players in 1 hour (GAM305)</a>. Note that Europe has three separate server regions (Ireland, London, Frankfurt) — the matchmaker treats them independently.
             </p>
             <p>
-                <strong>ACCURACY NOTE:</strong> This tool pings public AWS DynamoDB endpoints — not Fatshark's game servers directly, as those are not publicly addressable. Amazon Web Services does provide dedicated UDP ping beacons specifically for measuring GameLift latency (<code>gamelift-ping.{region}.api.aws</code>, port 7770), which would be the most accurate measurement method. However, browsers cannot send raw UDP packets, so these beacons cannot be used here. DynamoDB and GameLift run on the same AWS regional backbone, making DynamoDB endpoints a reliable HTTPS-based proxy.
+                <strong>ACCURACY NOTE:</strong> This tool pings public AWS DynamoDB endpoints — not Fatshark's game servers directly, as those are not publicly addressable. Amazon Web Services does provide dedicated UDP ping beacons specifically for measuring GameLift latency (<code>gamelift-ping.{region}.api.aws</code>, port 7770), which would be the most accurate measurement method. However, browsers cannot send raw UDP packets, so these beacons cannot be used here. DynamoDB and GameLift run on the same AWS regional backbone, making DynamoDB endpoints a reliable HTTPS-based proxy.<br><br><strong style="color: #4dff4d;">For exact UDP latency (same beacons the game uses):</strong> <a href="https://github.com/Vansinnet/darktidepingtool/releases/latest" target="_blank" rel="noopener" style="color: #4d9d4d;">download the native darktide-ping CLI tool</a>.
             </p>
             <p>
                 <strong>HOW TO INTERPRET RESULTS:</strong> Use the average latency as your primary guide. Lower is better — it means faster response between your inputs and the server. Pick the region with the lowest average for the best in-game performance.
