@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DARKTIDE - HIVE WORLD NEXUS ANALYSIS</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
 
@@ -20,6 +23,17 @@
             min-height: 100vh;
             position: relative;
             overflow-x: hidden;
+        }
+
+        .page-layout {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            gap: 2rem;
+            width: 100%;
+            max-width: 1200px;
+            position: relative;
+            z-index: 2;
         }
 
         body::before {
@@ -48,10 +62,19 @@
         }
 
         .container {
-            max-width: 700px;
-            width: 100%;
+            flex: 0 0 700px;
+            width: 700px;
+            min-width: 0;
             position: relative;
-            z-index: 2;
+        }
+
+        .sidebar {
+            flex: 1 1 320px;
+            min-width: 260px;
+            max-width: 380px;
+            position: sticky;
+            top: 2rem;
+            align-self: flex-start;
         }
 
         h1 {
@@ -362,12 +385,11 @@
         }
 
         .methodology {
-            margin-top: 2rem;
             padding: 15px;
             background: linear-gradient(135deg, rgba(20, 8, 8, 0.8), rgba(12, 8, 15, 0.8));
             border: 2px solid #660000;
             border-radius: 0;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #8a8a8a;
             box-shadow: 0 0 15px rgba(204, 0, 0, 0.1), inset 0 0 15px rgba(0, 0, 0, 0.5);
         }
@@ -409,6 +431,22 @@
             border-radius: 0;
             border: 1px solid rgba(255, 255, 255, 0.2);
             box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .region-group-header {
+            margin-top: 20px;
+            margin-bottom: 4px;
+            padding: 6px 12px;
+            color: #cc0000;
+            font-size: 0.75rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            border-bottom: 1px solid #330000;
+            font-family: 'Courier New', monospace;
+        }
+
+        .region-group-header:first-child {
+            margin-top: 0;
         }
 
         .loading {
@@ -458,6 +496,23 @@
             color: #cc0000 !important;
         }
 
+        @media (max-width: 900px) {
+            .page-layout {
+                flex-direction: column;
+            }
+
+            .container {
+                flex: none;
+                width: 100%;
+            }
+
+            .sidebar {
+                position: static;
+                max-width: 100%;
+                width: 100%;
+            }
+        }
+
         @media (max-width: 600px) {
             .stats-panel {
                 grid-template-columns: 1fr;
@@ -493,6 +548,7 @@
 </head>
 <body>
 
+<div class="page-layout">
     <div class="container">
         <div style="text-align: center; margin-bottom: 2rem;">
             <svg width="180" height="220" viewBox="0 0 180 220" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0 0 20px rgba(100, 50, 200, 0.6));">
@@ -611,25 +667,6 @@
             </div>
         </div>
 
-        <div class="methodology" id="methodologySection" style="display: none;">
-            <h3>⚙ PING MEASUREMENT METHODOLOGY</h3>
-            <p>
-                <strong>HOW IT WORKS:</strong> This tool sends 10 HTTP requests to a public Amazon Web Services (AWS) endpoint in each region and measures the round-trip time from your browser. The <strong>median</strong> of those 10 samples is shown as your latency — more robust than a simple average, since a single slow or timed-out request won't skew the result. p10 and p90 percentiles are also shown to give a picture of variability.
-            </p>
-            <p>
-                <strong>WHY THESE 8 REGIONS?:</strong> Fatshark confirmed in an official AWS case study that Darktide runs entirely on Amazon Web Services using Amazon GameLift — a managed dedicated game server hosting service. The 8 regions in this tool were verified through community-documented matchmaker logs and player discussions on the Fatshark forums and Steam. Every region listed has independent confirmation of Darktide servers operating there. Unverified regions (Mumbai, Seoul, Hong Kong, South Africa, N. California) have been excluded.
-            </p>
-            <p>
-                <strong>ACCURACY NOTE:</strong> This tool pings public AWS DynamoDB endpoints — not Fatshark's game servers directly, as those are not publicly addressable. Amazon Web Services does provide dedicated UDP ping beacons specifically for measuring GameLift latency (<code>gamelift-ping.{region}.api.aws</code>, port 7770), which would be the most accurate measurement method. However, browsers cannot send raw UDP packets, so these beacons cannot be used here. DynamoDB and GameLift run on the same AWS regional backbone, making DynamoDB endpoints a reliable HTTPS-based proxy.
-            </p>
-            <p>
-                <strong>HOW TO INTERPRET RESULTS:</strong> Use the average latency as your primary guide. Lower is better — it means faster response between your inputs and the server. Pick the region with the lowest average for the best in-game performance.
-            </p>
-            <p>
-                <strong>WHAT AFFECTS YOUR RESULTS:</strong> All measurements run entirely in your browser — no data is sent to any external service. Results vary based on your ISP, current network load, and physical distance to the server region.
-            </p>
-        </div>
-
         <div style="text-align: center; margin-top: 2rem; margin-bottom: 1rem;">
             <a href="https://github.com/Vansinnet/darktidepingtool" target="_blank" rel="noopener"
                class="github-link" style="display: inline-flex; align-items: center; gap: 8px; color: #666; text-decoration: none; font-size: 0.8rem; letter-spacing: 1px; text-transform: uppercase; transition: color 0.2s;">
@@ -645,365 +682,31 @@
                 Open Source — github.com/Vansinnet/darktidepingtool
             </a>
         </div>
-    </div>
+    </div><!-- end .container -->
 
-    <script>
-        // AWS GameLift regions confirmed used by Fatshark's Darktide matchmaker.
-        // Source: community-documented server region codes from in-game matchmaker logs.
-        // Fatshark's use of AWS GameLift is confirmed by the official AWS case study:
-        // https://aws.amazon.com/solutions/case-studies/fatshark-case-study/
-        // Latency is measured by pinging AWS DynamoDB public endpoints in each region —
-        // a standard proxy technique, since DynamoDB and GameLift share the same AWS
-        // regional backbone infrastructure.
-        const regions = {
-            "North America West (Oregon)": {
-                endpoint: "https://dynamodb.us-west-2.amazonaws.com",
-                datacenter: "AWS us-west-2 (Oregon)"
-            },
+    <div class="sidebar">
+        <div class="methodology" id="methodologySection">
+            <h3>⚙ PING MEASUREMENT METHODOLOGY</h3>
+            <p>
+                <strong>HOW IT WORKS:</strong> This tool sends 7 HTTP requests to a public Amazon Web Services (AWS) endpoint in each region and measures the round-trip time from your browser. The <strong>median</strong> of those 7 samples is shown as your latency — more robust than a simple average, since a single slow or timed-out request won't skew the result. p10 and p90 percentiles are also shown to give a picture of variability.
+            </p>
+            <p>
+                <strong>WHY THESE 13 REGIONS?:</strong> The complete region list was extracted directly from Darktide's own matchmaker log files (<code>AppData\Roaming\Fatshark\Darktide\console_logs</code>), which log the exact AWS region codes the matchmaker resolves latency against before placing you into a session. Every region listed here appears verbatim in those logs. Fatshark's use of AWS GameLift is confirmed by their AWS re:Invent 2023 session: <a href="https://www.youtube.com/watch?v=ZgGYtuNSX4M" target="_blank" rel="noopener" style="color: #666;">Scaling Darktide from 0 to 100,000 players in 1 hour (GAM305)</a>. Note that Europe has three separate server regions (Ireland, London, Frankfurt) — the matchmaker treats them independently.
+            </p>
+            <p>
+                <strong>ACCURACY NOTE:</strong> This tool pings public AWS DynamoDB endpoints — not Fatshark's game servers directly, as those are not publicly addressable. Amazon Web Services does provide dedicated UDP ping beacons specifically for measuring GameLift latency (<code>gamelift-ping.{region}.api.aws</code>, port 7770), which would be the most accurate measurement method. However, browsers cannot send raw UDP packets, so these beacons cannot be used here. DynamoDB and GameLift run on the same AWS regional backbone, making DynamoDB endpoints a reliable HTTPS-based proxy.
+            </p>
+            <p>
+                <strong>HOW TO INTERPRET RESULTS:</strong> Use the average latency as your primary guide. Lower is better — it means faster response between your inputs and the server. Pick the region with the lowest average for the best in-game performance.
+            </p>
+            <p>
+                <strong>WHAT AFFECTS YOUR RESULTS:</strong> All measurements run entirely in your browser — no data is sent to any external service. Results vary based on your ISP, current network load, and physical distance to the server region.
+            </p>
+        </div>
+    </div><!-- end .sidebar -->
 
-            "North America East (Ohio)": {
-                endpoint: "https://dynamodb.us-east-2.amazonaws.com",
-                datacenter: "AWS us-east-2 (Ohio)"
-            },
-            "Canada (Montreal)": {
-                endpoint: "https://dynamodb.ca-central-1.amazonaws.com",
-                datacenter: "AWS ca-central-1 (Canada Central)"
-            },
-            "South America (São Paulo)": {
-                endpoint: "https://dynamodb.sa-east-1.amazonaws.com",
-                datacenter: "AWS sa-east-1 (São Paulo)"
-            },
-            "Europe (Frankfurt)": {
-                endpoint: "https://dynamodb.eu-central-1.amazonaws.com",
-                datacenter: "AWS eu-central-1 (Frankfurt)"
-            },
-            "Southeast Asia (Singapore)": {
-                endpoint: "https://dynamodb.ap-southeast-1.amazonaws.com",
-                datacenter: "AWS ap-southeast-1 (Singapore)"
-            },
-            "East Asia (Tokyo)": {
-                endpoint: "https://dynamodb.ap-northeast-1.amazonaws.com",
-                datacenter: "AWS ap-northeast-1 (Tokyo)"
-            },
-            "Oceania (Sydney)": {
-                endpoint: "https://dynamodb.ap-southeast-2.amazonaws.com",
-                datacenter: "AWS ap-southeast-2 (Sydney)"
-            }
-        };
+</div><!-- end .page-layout -->
 
-        const resultsDiv = document.getElementById('results');
-        const startBtn = document.getElementById('startBtn');
-        const clearBtn = document.getElementById('clearBtn');
-        const statsPanel = document.getElementById('statsPanel');
-
-        // Improved function to measure latency with multiple samples
-        async function measureLatency(url) {
-            const samples = [];
-            const attempts = 10; // Take 10 samples for better accuracy
-            let failedAttempts = 0;
-
-            for (let i = 0; i < attempts; i++) {
-                // AbortController lets us properly cancel the fetch on timeout,
-                // instead of just ignoring the still-running request.
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 5000);
-
-                try {
-                    const start = performance.now();
-
-                    // Use fetch with no-cors to measure HTTP request time.
-                    // Add cache-busting parameter to force fresh requests.
-                    await fetch(url + "?_=" + Math.random() + "&t=" + Date.now(), {
-                        mode: 'no-cors',
-                        cache: 'no-store',
-                        redirect: 'follow',
-                        signal: controller.signal
-                    });
-
-                    clearTimeout(timeoutId);
-                    const elapsed = Math.round(performance.now() - start);
-                    samples.push(Math.max(elapsed, 1)); // Ensure minimum 1ms
-
-                } catch (error) {
-                    clearTimeout(timeoutId);
-                    // Track failed/timed-out attempts for packet loss estimation.
-                    // Do NOT push 5000ms into samples — that would skew median/percentiles.
-                    // Failures are accounted for separately via packetLoss.
-                    failedAttempts++;
-                }
-
-                // Small delay between samples to avoid overwhelming the server
-                if (i < attempts - 1) {
-                    await new Promise(resolve => setTimeout(resolve, 100));
-                }
-            }
-
-            // If every single attempt failed, return a sentinel value
-            if (samples.length === 0) {
-                return {
-                    ping: 9999, median: 9999, average: 9999,
-                    min: 9999, max: 9999, p10: 9999, p90: 9999,
-                    stdDev: 0, jitter: 0,
-                    samples: [],
-                    packetLoss: 100,
-                    failedAttempts: attempts,
-                    totalAttempts: attempts
-                };
-            }
-
-            // Sort once — used for median, percentiles, min, max
-            samples.sort((a, b) => a - b);
-
-            // Median: more robust than average against outliers
-            const median = samples[Math.floor(samples.length / 2)];
-
-            // Average kept for reference / stddev calculation
-            const average = Math.round(samples.reduce((a, b) => a + b) / samples.length);
-
-            const min = samples[0];
-            const max = samples[samples.length - 1];
-
-            // p10 and p90 give a clear picture of variability without extreme outliers
-            const p10 = samples[Math.max(0, Math.floor(samples.length * 0.1))];
-            const p90 = samples[Math.min(samples.length - 1, Math.floor(samples.length * 0.9))];
-
-            // Standard deviation (jitter) — calculated against average
-            const variance = samples.reduce((sum, val) => sum + Math.pow(val - average, 2), 0) / samples.length;
-            const stdDev = Math.round(Math.sqrt(variance));
-
-            // Packet loss: failed attempts / total attempts
-            const packetLoss = Math.round((failedAttempts / attempts) * 100);
-
-            return {
-                ping: median,   // primary metric is now median
-                samples: samples,
-                median: median,
-                average: average,
-                min: min,
-                max: max,
-                p10: p10,
-                p90: p90,
-                stdDev: stdDev,
-                jitter: stdDev,
-                packetLoss: packetLoss,
-                failedAttempts: failedAttempts,
-                totalAttempts: attempts
-            };
-        }
-
-        function getPingClass(ping) {
-            if (ping <= 80) return 'ping-good';
-            if (ping <= 120) return 'ping-ok';
-            if (ping <= 180) return 'ping-poor';
-            return 'ping-bad';
-        }
-
-        function getStabilityScore(stdDev, packetLoss) {
-            // Calculate a stability score (0-100) based on jitter and packet loss
-            // Lower jitter and packet loss = higher score
-
-            // Normalize jitter (assume max useful jitter is 200ms)
-            const jitterScore = Math.max(0, 100 - (stdDev / 2));
-
-            // Normalize packet loss (0% loss = 100, any loss reduces score)
-            const lossScore = Math.max(0, 100 - (packetLoss * 5));
-
-            // Average the two components
-            const finalScore = Math.round((jitterScore + lossScore) / 2);
-
-            return Math.max(0, Math.min(100, finalScore));
-        }
-
-        function getJitterClass(stdDev) {
-            if (stdDev <= 15) return 'jitter-excellent';
-            if (stdDev <= 30) return 'jitter-good';
-            if (stdDev <= 60) return 'jitter-poor';
-            return 'jitter-bad';
-        }
-
-        function getStabilityDescription(score) {
-            if (score >= 90) return 'EXCELLENT';
-            if (score >= 75) return 'STABLE';
-            if (score >= 60) return 'MODERATE';
-            if (score >= 40) return 'UNSTABLE';
-            return 'POOR';
-        }
-
-        function updateStats() {
-            const rows = document.querySelectorAll('.row');
-            const pings = [];
-
-            rows.forEach(row => {
-                const pingText = row.querySelector('.ping-value').innerText;
-                const pingValue = parseInt(pingText);
-                if (!isNaN(pingValue)) {
-                    pings.push(pingValue);
-                }
-            });
-
-            if (pings.length === 0) {
-                statsPanel.style.display = 'none';
-                document.getElementById('methodologySection').style.display = 'none';
-                return;
-            }
-
-            statsPanel.style.display = 'grid';
-            document.getElementById('methodologySection').style.display = 'block';
-
-            const avgPing = Math.round(pings.reduce((a, b) => a + b) / pings.length);
-            const bestPing = Math.min(...pings);
-            const worstPing = Math.max(...pings);
-
-            document.getElementById('avgPing').innerText = avgPing + ' ms';
-            document.getElementById('bestServer').innerText = bestPing + ' ms';
-            document.getElementById('worstServer').innerText = worstPing + ' ms';
-        }
-
-        clearBtn.addEventListener('click', () => {
-            resultsDiv.innerHTML = '';
-            statsPanel.style.display = 'none';
-            document.getElementById('methodologySection').style.display = 'none';
-            startBtn.disabled = false;
-            startBtn.innerText = '▶ START SCAN';
-            const recommendation = document.querySelector('.recommendation');
-            if (recommendation) {
-                recommendation.remove();
-            }
-        });
-
-        startBtn.addEventListener('click', async () => {
-            startBtn.disabled = true;
-            startBtn.innerText = '⏳ SCANNING...';
-            clearBtn.disabled = true;
-            resultsDiv.innerHTML = '<div class="loading">Scanning regions...</div>';
-
-            const regionEntries = Object.entries(regions);
-            let bestRegion = null;
-            let bestPing = Infinity;
-
-            for (let index = 0; index < regionEntries.length; index++) {
-                const [name, {endpoint, datacenter}] = regionEntries[index];
-
-                // Create UI element
-                const row = document.createElement('div');
-                row.className = 'row';
-
-                const regionInfo = document.createElement('div');
-                regionInfo.className = 'region-info';
-
-                const nameSpan = document.createElement('div');
-                nameSpan.className = 'region-name';
-                nameSpan.innerText = name;
-
-                regionInfo.appendChild(nameSpan);
-
-                const pingDetails = document.createElement('div');
-                pingDetails.className = 'ping-details';
-
-                const pingSpan = document.createElement('div');
-                pingSpan.className = 'ping-value ping-testing';
-                pingSpan.innerText = 'Testing...';
-
-                const statsSpan = document.createElement('div');
-                statsSpan.className = 'ping-stats';
-                statsSpan.innerText = '';
-
-                pingDetails.appendChild(pingSpan);
-                pingDetails.appendChild(statsSpan);
-
-                row.appendChild(regionInfo);
-                row.appendChild(pingDetails);
-                resultsDiv.appendChild(row);
-
-                // Perform measurement
-                try {
-                    const result = await measureLatency(endpoint);
-                    pingSpan.innerText = result.median + ' ms';
-                    pingSpan.className = 'ping-value ' + getPingClass(result.median);
-                    statsSpan.innerText = '(median) p10: ' + result.p10 + 'ms  p90: ' + result.p90 + 'ms';
-
-                    // Calculate stability score
-                    const stabilityScore = getStabilityScore(result.jitter, result.packetLoss);
-                    const jitterClass = getJitterClass(result.jitter);
-                    const stabilityDesc = getStabilityDescription(stabilityScore);
-
-                    // Create stability metric display
-                    const stabilityMetric = document.createElement('div');
-                    stabilityMetric.className = 'stability-metric';
-
-                    const jitterIndicator = document.createElement('span');
-                    jitterIndicator.className = 'jitter-indicator ' + jitterClass;
-                    jitterIndicator.title = 'Jitter: ' + result.jitter + 'ms';
-
-                    const stabilityLabel = document.createElement('span');
-                    stabilityLabel.innerText = stabilityDesc + ' (' + stabilityScore + ')';
-
-                    const stabilityBar = document.createElement('div');
-                    stabilityBar.className = 'stability-bar';
-                    const fill = document.createElement('div');
-                    fill.className = 'stability-fill';
-                    // Invert the bar so high score = full bar
-                    fill.style.width = stabilityScore + '%';
-                    stabilityBar.appendChild(fill);
-
-                    stabilityMetric.appendChild(jitterIndicator);
-                    stabilityMetric.appendChild(stabilityLabel);
-                    stabilityMetric.appendChild(stabilityBar);
-                    pingDetails.appendChild(stabilityMetric);
-
-                    // Create packet loss display if there's any loss
-                    const packetLossDiv = document.createElement('div');
-                    packetLossDiv.className = 'packet-loss';
-                    if (result.packetLoss > 0) {
-                        packetLossDiv.classList.add(result.packetLoss >= 30 ? 'critical' : 'warning');
-                        packetLossDiv.innerText = '⚠ PACKET LOSS: ' + result.packetLoss + '%';
-                    } else {
-                        packetLossDiv.style.color = '#4d9d4d';
-                        packetLossDiv.innerText = '✓ NO PACKET LOSS';
-                    }
-                    pingDetails.appendChild(packetLossDiv);
-
-                    // Track best server (by median)
-                    if (result.median < bestPing) {
-                        bestPing = result.median;
-                        bestRegion = name;
-                    }
-                } catch (error) {
-                    pingSpan.innerText = 'Error';
-                    pingSpan.className = 'ping-value ping-bad';
-                    statsSpan.innerText = '';
-                }
-
-                // Small delay between regions to avoid network congestion
-                if (index < regionEntries.length - 1) {
-                    await new Promise(resolve => setTimeout(resolve, 200));
-                }
-            }
-
-            // Remove loading message
-            const loadingDiv = document.querySelector('.loading');
-            if (loadingDiv) {
-                loadingDiv.remove();
-            }
-
-            // Show recommendation
-            const recommendationDiv = document.createElement('div');
-            recommendationDiv.className = 'recommendation';
-            recommendationDiv.innerHTML = `
-                <div class="recommendation-title">LOWEST LATENCY REGION</div>
-                <div class="recommendation-server">${bestRegion}</div>
-                <div style="font-size: 0.85rem; color: #666; margin-top: 8px;">LATENCY: ${bestPing} ms</div>
-            `;
-
-            // Insert recommendation at the top
-            resultsDiv.insertBefore(recommendationDiv, resultsDiv.firstChild);
-
-            updateStats();
-
-            startBtn.disabled = false;
-            startBtn.innerText = '▶ SCAN AGAIN';
-            clearBtn.disabled = false;
-        });
-    </script>
+    <script src="app.js" defer></script>
 </body>
 </html>
