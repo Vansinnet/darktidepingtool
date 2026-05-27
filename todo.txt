@@ -1,0 +1,2 @@
+1) lägg till en länk till Github (med ikon för github) i botten och att det är öppenkällkod (ska alltid ligga längst ner och ska vara på engelska i texten, inte "Öppenkällkod — github.com/Vansinnet/darktidepingtool")
+2) granska sårbarheter i koden (för att undvika spam, exploits osv)
